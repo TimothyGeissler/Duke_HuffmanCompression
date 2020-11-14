@@ -50,6 +50,20 @@ public class HuffProcessor {
 		}
 		out.close();
 	}
+
+	public HuffNode readTree(BitInputStream in) {
+		int bit = in.readBits(1);
+		if (bit == -1) throw new HuffException("Invalid bit");
+		if (bit == 0) {
+			HuffNode left = readTree(in);
+			HuffNode right = readTree(in);
+			return new HuffNode(0, 0, left, right);
+		} else {
+			int val = in.readBits(9);
+			return new HuffNode(val, 0, null, null);
+		}
+	}
+
 	/**
 	 * Decompresses a file. Output file must be identical bit-by-bit to the
 	 * original.
